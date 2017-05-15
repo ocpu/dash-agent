@@ -27,7 +27,7 @@ it('builds a request fine', done => {
             }
         }
     })
-    RequestBuilder.request('GET', 'http://google.com').send()
+    RequestBuilder.request('', 'http://google.com').send()
 })
 
 it('builds a get request fine', done => {

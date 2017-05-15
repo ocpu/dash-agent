@@ -1,26 +1,55 @@
 (define => define(() => {
+
+const doIf = (condition, optional, success, faliure) => {
+    if (optional) {
+        if (typeof condition !== 'undefined') {
+            if (typeof condition === 'function') {
+                if (condition()) success ? success() : void 0
+                else faliure ? faliure() : void 0
+            } else if (condition) success ? success() : void 0
+            else faliure ? faliure() : void 0
+        } else success ? success() : void 0
+    } else {
+        if (typeof condition !== 'undefined') {
+            if (typeof condition === 'function') {
+                if (condition()) success ? success() : void 0
+                else faliure ? faliure() : void 0
+            } else if (condition) success ? success() : void 0
+            else faliure ? faliure() : void 0
+        } else faliure ? faliure() : void 0
+    }
+}
+
 class RequestBuilder {
     constructor(method, url) {
-        const { host, path, protocol, port } = require('url').parse(url)
-        this._httpObj = protocol.startsWith('https') ? require('https') : require('http')
+        const { host, path, port } = require('url').parse(url)
+        this._httpObj = require('https')
         this._opts = { method, host, path, port }
     }
 
+    query(key, value, condition) {
+        doIf(condition, true, () => {
+            if (Array.isArray(value)) for (let val of value)
+                this._opts.path += `${this._opts.path.includes('?') ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(val)}`
+            else this._opts.path += `${this._opts.path.includes('?') ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+        })
+        return this
+    }
+
+    queries(queries, condition) {
+        doIf(condition, true, () => {
+            Array.from(Object.keys(queries)).filter(queries.hasOwnProperty).map(key => ({ key, value: queries[key] })).forEach(({ key, value }) => this.query(key, value))
+        })
+        return this
+    }
+
     header(name, value, condition) {
-        if (typeof condition !== 'undefined') {
-            if (typeof condition === 'function') {
-                if (condition()) this._opts.headers = Object.assign({ [name]: value }, Object(this._opts.headers))
-            }else if (condition) this._opts.headers = Object.assign({ [name]: value }, Object(this._opts.headers))
-        } else this._opts.headers = Object.assign({ [name]: value }, Object(this._opts.headers))
+        doIf(condition, true, () => this._opts.headers = Object.assign({ [name]: value }, Object(this._opts.headers)))
         return this
     }
 
     headers(headers, condition) {
-        if (typeof condition !== 'undefined') {
-            if (typeof condition === 'function') {
-                if (condition()) this._opts.headers = Object.assign({}, headers, Object(this._opts.headers))
-            }else if (condition) this._opts.headers = Object.assign({}, headers, Object(this._opts.headers))
-        } else this._opts.headers = Object.assign({}, headers, Object(this._opts.headers))
+        doIf(condition, true, () => this._opts.headers = Object.assign(Object(this._opts.headers), Object(headers)))
         return this
     }
 

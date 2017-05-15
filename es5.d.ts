@@ -1,5 +1,7 @@
 declare class RequestBuilder {
     static request(method: string, url: string): RequestBuilder
+    query(key: string, value: string, condition?: boolean | (() => boolean)): this
+    queries(queries: Object, condition?: boolean | (() => boolean)): this
     header(name: string, value: string, condition?: boolean | (() => boolean)): this
     headers(headers: Object, condition?: boolean | (() => boolean)): this
     static get(url: string): RequestBuilder
