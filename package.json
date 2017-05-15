@@ -1,0 +1,28 @@
+{
+  "name": "request-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap test/*.js --cov",
+    "posttest": "tap --coverage-report=text-summary"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ocpu@gitlab.com/ocpu/request-builder-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/ocpu/request-builder-js/issues"
+  },
+  "homepage": "https://gitlab.com/ocpu/request-builder-js#README",
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^3.4.1",
+    "mock-require": "^2.0.2",
+    "sinon": "^2.2.0",
+    "tap": "^10.3.2"
+  }
+}
