@@ -4,27 +4,27 @@ const doIf = (condition, optional, success, faliure) => {
     if (optional) {
         if (typeof condition !== 'undefined') {
             if (typeof condition === 'function') {
-                if (condition()) success ? success() : void 0
-                else faliure ? faliure() : void 0
-            } else if (condition) success ? success() : void 0
-            else faliure ? faliure() : void 0
-        } else success ? success() : void 0
+                if (condition()) success&&success()
+                else faliure&&faliure()
+            } else if (condition) success&&success()
+            else faliure&&faliure()
+        } else success&&success()
     } else {
         if (typeof condition !== 'undefined') {
             if (typeof condition === 'function') {
-                if (condition()) success ? success() : void 0
-                else faliure ? faliure() : void 0
-            } else if (condition) success ? success() : void 0
-            else faliure ? faliure() : void 0
-        } else faliure ? faliure() : void 0
+                if (condition()) success&&success()
+                else faliure&&faliure()
+            } else if (condition) success&&success()
+            else faliure&&faliure()
+        } else faliure&&faliure()
     }
 }
 
 class RequestBuilder {
     constructor(method, url) {
-        const { host, path, port } = require('url').parse(url)
-        this._httpObj = require('https')
-        this._opts = { method, host, path, port }
+        const { host, path, port, protocol } = require('url').parse(url)
+        this._httpObj = require(protocol.substring(0, protocol.length - 1))
+        this._opts = { method, host, path, port, protocol }
     }
 
     query(key, value, condition) {
@@ -73,9 +73,7 @@ class RequestBuilder {
     static post(url) { return RequestBuilder.request('POST', url) }
     static put(url) { return RequestBuilder.request('PUT', url) }
     static delete(url) { return RequestBuilder.request('DELETE', url) }
-    static connect(url) { return RequestBuilder.request('OPTIONS', url) }
     static options(url) { return RequestBuilder.request('OPTIONS', url) }
-    static trace(url) { return RequestBuilder.request('OPTIONS', url) }
     static patch(url) { return RequestBuilder.request('PATCH', url) }
 }
 

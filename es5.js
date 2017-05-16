@@ -12,7 +12,7 @@ function RequestBuilder(method, url) {
         port = _require$parse.port;
 
     this._httpObj = protocol.startsWith('https') ? require('https') : require('http');
-    this._opts = { method: method, host: host, path: path, port: port };
+    this._opts = { method: method, host: host, path: path, port: port, protocol: protocol };
 }
 
 RequestBuilder.prototype.header = function header(name, value, condition) {

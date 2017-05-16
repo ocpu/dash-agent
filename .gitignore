@@ -1,7 +1,8 @@
-logs
 *.log
 npm-debug.log*
 
+logs
 coverage/
-
 node_modules/
+.vscode/
+.nyc_output/
