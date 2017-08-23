@@ -31,18 +31,18 @@ declare interface Request {
     pipe(readable: ReadableStream): Promise<Response>
 }
 
-declare var Request: {
-    new(method: string, url: string): Request
-    prototype: Request
-    get(url: string): Request
-    head(url: string): Request
-    post(url: string): Request
-    put(url: string): Request
-    del(url: string): Request
-    connect(url: string): Request
-    options(url: string): Request
-    patch(url: string): Request
+declare function request(method: string, url: string): Request
+declare namespace request {
+    function get(url: string): Request
+    function head(url: string): Request
+    function post(url: string): Request
+    function put(url: string): Request
+    function del(url: string): Request
+    function connect(url: string): Request
+    function options(url: string): Request
+    function patch(url: string): Request
 }
+
 
 declare class Response {
 
@@ -58,4 +58,4 @@ declare class Response {
     json(): Promise<Object>
 }
 
-export = Request
+export = request
