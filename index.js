@@ -1,4 +1,7 @@
-(define => define(['url', 'util', 'https', 'zlib'], ({ parse: parseURL }, util, https, zlib) => {
+const { parse: parseURL } = require('url')
+const util = require('util')
+const https = require('https')
+const zlib = require('zlib')
 
 function includes(src, sub) {
     if (!util.isArray(src) && (typeof src === 'object' || typeof src === 'function')) return sub in src
@@ -194,11 +197,4 @@ function request(method, url) {
 request.del = function (url) {
     return new Request('DELETE', url)
 }
-return request
-}))(typeof define === 'function' && define.amd ? define : (deps, factory) => {
-    if (typeof deps === 'function') {
-        factory = deps
-        deps = []
-    }
-    module.exports = factory.apply(null, deps.map(require))
-})
+module.exports = request

@@ -2,19 +2,10 @@ require('tap').mochaGlobals()
 const expect = require('expect.js')
 const mock = require('mock-require')
 
-const RequestBuilder = require('../')
+const request = require('../')
 
 beforeEach(() => {
     mock.stopAll()
-})
-
-it('throws if the protocol is not http or https', done => {
-    try {
-        RequestBuilder.get('ftp://opencubes.io/index.html')
-        done(new Error())
-    } catch(e) {
-        done()
-    }
 })
 
 it('builds a request fine', done => {
@@ -27,10 +18,10 @@ it('builds a request fine', done => {
             }
         }
     })
-    RequestBuilder.request('', 'https://google.com').send()
+    request('', '').send()
 })
 
-for (let method of ['get', 'post', 'head', 'options', 'delete', 'put', 'patch']) it(`builds a ${method} request fine`, done => {
+for (let method of ['get', 'post', 'head', 'options', 'put', 'patch']) it(`builds a ${method} request fine`, done => {
     mock('https', {
         request(opts, callback) {
             expect(opts.host).to.be('opencubes.io')
@@ -43,7 +34,7 @@ for (let method of ['get', 'post', 'head', 'options', 'delete', 'put', 'patch'])
             }
         }
     })
-    RequestBuilder[method]('https://opencubes.io').send()
+    request[method]('https://opencubes.io').send()
 })
 
 it('adds a header', done => {
