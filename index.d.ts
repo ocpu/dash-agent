@@ -13,7 +13,6 @@ declare interface Request {
     query(queries: Object): Request
     set(name: string, value: string): Request
     set(headers: Object): Request
-    pipe(stream: stream.Readable): Request
     /**
      * Send form data url encoded 
      */
@@ -32,6 +31,7 @@ declare interface Request {
     send(data: Buffer): Promise<Response>
     send(data: Object): Promise<Response>
     send(data: string): Promise<Response>
+    pipe(stream: stream.Readable, contentType?: string): Promise<Response>
 }
 
 declare class Response {

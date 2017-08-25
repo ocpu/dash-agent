@@ -117,6 +117,24 @@ class Request {
         req.data = this.data.slice()
         return req
     }
+
+    pipe(stream, contentType) {
+        return new Promise(resolve => {
+            if (contentType && !('content-type' in Object.keys(this.request.headers).map(key => key.toLowerCase())))
+                this.set('Content-Type', contentType)
+            const reqOpts = {
+                host: this.request.host,
+                path: this.request.path + this.request.search + (this.request.hash || ''),
+                headers: this.request.headers,
+                method: this.request.method,
+                port: this.request.port || this.request.protocol === 'https:' ? 443 : 80
+            }
+            const request = https.request(reqOpts, res => {
+                resolve(new Response(res))
+            })
+            stream.pipe(request)
+        })
+    }
     
     send(data) {
         return new Promise(resolve => {
@@ -127,7 +145,7 @@ class Request {
                     this.write(new Buffer(JSON.stringify(data)))
                 } else this.write(data)
             }
-            const req = {
+            const reqOpts = {
                 host: this.request.host,
                 path: this.request.path + this.request.search + (this.request.hash || ''),
                 headers: this.request.headers,
@@ -135,8 +153,8 @@ class Request {
                 port: this.request.port || this.request.protocol === 'https:' ? 443 : 80
             }
             if (this.request.auth)
-                req['auth'] = this.request.auth
-            const request = https.request(req, res => {
+                reqOpts['auth'] = this.request.auth
+            const request = https.request(reqOpts, res => {
                 resolve(new Response(res))
             })
             each(this.data, data => request.write(data))
