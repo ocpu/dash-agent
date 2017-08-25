@@ -1,5 +1,5 @@
 const { parse: parseURL } = require('url')
-const { isArray, isBuffer, isObject } = require('util')
+const { isArray, isBuffer, isObject, isString } = require('util')
 const https = require('https')
 const zlib = require('zlib')
 
@@ -95,7 +95,7 @@ class Request {
             return this
         let head = `\r\n--${Request.boundary}\r\nContent-Disposition: form-data; name="${field}"`
         if (isObject(options) && options.filename)
-            head += `; filename="${filename}"`
+            head += `; filename="${options.filename}"`
         let type
         if (isObject(data))
             type = 'application/json'
@@ -110,7 +110,7 @@ class Request {
     }
     
     send(data) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             if (data) {
                 if (isObject(data)) {
                     if (!('content-type' in Object.keys(this.request.headers).map(key => key.toLowerCase())))
