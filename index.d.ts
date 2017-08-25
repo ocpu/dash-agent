@@ -24,6 +24,7 @@ declare interface Request {
     attach(field: string, data: Object): Request
     write(data: Buffer): Request
     write(data: string): Request
+    clone(): Request
     send(): Promise<Response>
     send(data: Buffer): Promise<Response>
     send(data: Object): Promise<Response>

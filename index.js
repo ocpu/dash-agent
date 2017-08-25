@@ -108,6 +108,13 @@ class Request {
         this.write(isStream(data) || isBuffer(data) ? data : new Buffer(isObject(data) ? JSON.stringify(data) : data.toString()))
         return this
     }
+
+    clone() {
+        const req = new Request()
+        req.request = Object.assign({}, this.request)
+        req.data = this.data.slice()
+        return req
+    }
     
     send(data) {
         return new Promise(resolve => {
