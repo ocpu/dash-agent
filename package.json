@@ -1,7 +1,7 @@
 {
   "name": "dash-agent",
   "version": "0.2.0-beta",
-  "description": "",
+  "description": "Making requests easier",
   "main": "index.js",
   "scripts": {
     "test": "tap test/*.js --cov",
@@ -11,8 +11,12 @@
     "type": "git",
     "url": "git+https://ocpu@gitlab.com/ocpu/dash-agent.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "request",
+    "dash",
+    "agent"
+  ],
+  "author": "Martin Hövre <martin.hovre@opencubes.io>",
   "license": "MIT",
   "bugs": {
     "url": "https://gitlab.com/ocpu/dash-agent/issues"
