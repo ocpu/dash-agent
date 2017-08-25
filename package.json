@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://ocpu@gitlab.com/ocpu/request-builder-js.git"
+    "url": "git+https://ocpu@gitlab.com/ocpu/dash-agent.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/ocpu/request-builder-js/issues"
+    "url": "https://gitlab.com/ocpu/dash-agent/issues"
   },
-  "homepage": "https://gitlab.com/ocpu/request-builder-js#README",
+  "homepage": "https://gitlab.com/ocpu/dash-agent#README",
   "devDependencies": {
     "expect.js": "^0.3.1",
     "mocha": "^3.4.1",
