@@ -1,6 +1,6 @@
 {
-  "name": "request-agent",
-  "version": "0.1.0",
+  "name": "dash-agent",
+  "version": "0.2.0-beta",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://gitlab.com/ocpu/request-builder-js/issues"
   },

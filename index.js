@@ -1,151 +1,141 @@
 const { parse: parseURL } = require('url')
-const util = require('util')
+const { isArray, isBuffer, isObject } = require('util')
 const https = require('https')
 const zlib = require('zlib')
 
 function includes(src, sub) {
-    if (!util.isArray(src) && (typeof src === 'object' || typeof src === 'function')) return sub in src
+    if (!isArray(src) && (typeof src === 'object' || typeof src === 'function')) return sub in src
     return !!~src.indexOf(sub)
 }
 
-function Request(method, url) {
-    this.request = Object.assign({}, parseURL(url), { method, headers: {} })
-    this.request.search = this.request.search || ''
+const isStream = (arg) => {
+    return '_read' in arg && 'readable' in arg && 'pipe' in arg
 }
 
-Request.prototype.query = function query(key, value) {
-    if (typeof key === 'object') {
-        Object.getOwnPropertyNames(key).forEach(k => this.query(k, key[k]))
-        return this
+const forEach = (array, cb) => {
+    const len = array.length
+    let at = 0
+    while (at < len)
+        cb(array[at], at++, array)
+}
+const each = (obj, cb) => {
+    if (isArray(obj))
+        forEach(obj, cb)
+    else if (isObject(obj)) {
+        const keys = Object.keys(obj)
+        const len = keys.length
+        let at = 0
+        while (at < len)
+            cb(keys[at], obj[keys[at++]], obj)
     }
-    
-    if (typeof key === 'object' || typeof key === 'function' || typeof key === 'boolean', typeof key === 'undefined')
-        throw new TypeError(`Invalid key type: ${typeof key}`)
-    
-    if (typeof value === 'function' || (typeof value === 'object' && !util.isArray(value)))
-        throw new TypeError(`Invalid value type: ${typeof value}`)
-
-    if (Array.isArray(value)) for (let val of value)
-        this.request.search  += `${this.request.search[0] === '?' ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(val)}`
-    else this.request.search += `${this.request.search[0] === '?' ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-    return this
 }
 
-Request.prototype.set = function set(name, value) {
-    if (typeof name === 'object') {
-        for (let key of Object.getOwnPropertyNames(name)) this.set(key, name[key])
-        return this
+class Request { 
+    constructor(method, url) {
+        this.request = Object.assign({}, parseURL(url), { method, headers: {} })
+        this.request.search = this.request.search || ''
+        this.data = []
     }
 
-    if (!util.isString(name))
-        throw new TypeError(`Invalid name type: ${typeof name}`)
+    static get boundary() { return '--MultipartRequest' }
 
-    this.request.headers[name] = value.toString()
-    return this
-}
-
-Request.prototype.multipart = function multipart(data) {
-    if (data) {
-        const req = new URLEncodedRequest()
-        return
-    }
-    return new MultipartRequest(this.request)
-}
-
-Request.prototype.send = function send(data) {
-    return new Promise((resolve, reject) => {
-        const req = {
-            host: this.request.host,
-            path: this.request.path + this.request.search + (this.request.hash || ''),
-            headers: this.request.headers,
-            method: this.request.method,
-            port: this.request.port || this.request.protocol === 'https:' ? 443 : 80
+    query(key, value) {
+        if (typeof key === 'object') {
+            each(key, this.query.bind(this))
+            return this
         }
-        if (this.request.auth)
-            req['auth'] = this.request.auth
-        const request = https.request(req, res => {
-            resolve(new Response(res))
+        
+        if (typeof key === 'object' || typeof key === 'function' || typeof key === 'boolean', typeof key === 'undefined')
+            throw new TypeError(`Invalid key type: ${typeof key}`)
+        
+        if (typeof value === 'function' || (typeof value === 'object' && !isArray(value)))
+            throw new TypeError(`Invalid value type: ${typeof value}`)
+
+        if (isArray(value)) each(value, val => {
+            this.request.search  += `${this.request.search[0] === '?' ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(val)}`
         })
-        if (data) {
-            if (util.isArray(data)) for (let d of data)
-                request.write(d)
-            else request.write(data)
-        }
-        request.end()
-    })
-}
-
-function MultipartRequest(request) {
-    this.request = request
-    this.bufs = []
-}
-
-MultipartRequest.boundary = '--MultipartRequest'
-
-MultipartRequest.prototype.query = Request.prototype.query
-MultipartRequest.prototype.set = Request.prototype.set
-MultipartRequest.prototype.attach = function attach(fieldName, data, type, fileName) {
-    if (data === void 0)
+        else this.request.search += `${this.request.search[0] === '?' ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(value)}`
         return this
-    let head = `\r\n--${MultipartRequest.boundary}\r\nContent-Disposition: form-data; name="${fieldName}"`
-    if (filename)
-        head += `; filename="${filename}"`
-    head += `\r\nContent-Type: ${type || 'application/octet-stream'}`
-    this.bufs.push(
-        new Buffer(head + '\r\n\r\n'),
-        data
-    )
-    return this
-}
-MultipartRequest.prototype.send = function send() {
-    this.bufs.push(new Buffer(`\r\n--${MultipartRequest.boundary}--`))
-    this.request.headers['Content-Type'] = `multipart/form-data; boundary=${MultipartRequest.boundary}`
-    return Request.prototype.send.call(this, this.bufs)
-}
+    }
 
-function URLEncodedRequest(request) {
-    this.request = request
-    this.buf = ''
-}
+    set(name, value) {
+        if (typeof name === 'object') {
+            each(name, this.set.bind(this))
+            return this
+        }
 
-URLEncodedRequest.prototype.boundary = '--URLEncodedRequest'
+        if (!isString(name))
+            throw new TypeError(`Invalid name type: ${typeof name}`)
 
-URLEncodedRequest.prototype.query = Request.prototype.query
-URLEncodedRequest.prototype.set = Request.prototype.set
-URLEncodedRequest.prototype.multipart = function multipart() {
-    const req = new MultipartRequest(this.request)
-    const { query } = parseURL(this.buf, true)
-    Object.getOwnPropertyNames(query).forEach(key => {
-        req.attach(
-            key,
-            util.isArray(query[key]) ? JSON.stringify(query[key]) : query[key],
-            util.isArray(query[key]) ? 'application/json' : 'text/plain'
-        )
-    })
-    return req
-}
-URLEncodedRequest.prototype.add = function add(key, value) {
-    if (typeof key === 'object') {
-        Object.getOwnPropertyNames(key).forEach(k => this.add(k, key[k]))
+        this.request.headers[name] = value.toString()
+        return this
+    }
+
+    write(data) {
+        if (isBuffer(data))
+            this.data.push(data)
+        else
+            this.data.push(new Buffer(data.toString()))
+        return this
+    }
+
+    formData(data) {
+        if (!('content-type' in Object.keys(this.request.headers).map(key => key.toLowerCase())))
+            this.set('Content-Type', 'application/x-www-form-urlencoded')
+        each(data, (key, value) => {
+            this.write((this.data.length !== 0 ? '&' : '') + `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        })
+        return this
+    }
+
+    attach(field, data, options) {
+        if (!('content-type' in Object.keys(this.request.headers).map(key => key.toLowerCase())))
+            this.set('Content-Type', 'multipart/form-data; boundary=' + Request.boundary)
+        if (data === void 0)
+            return this
+        let head = `\r\n--${Request.boundary}\r\nContent-Disposition: form-data; name="${field}"`
+        if (isObject(options) && options.filename)
+            head += `; filename="${filename}"`
+        let type
+        if (isObject(data))
+            type = 'application/json'
+        else if (!isBuffer(data) && !isStream(data))
+            type = options || 'text/plain'
+        else
+            type = (isObject(options) && options.contentType) || 'application/octet-stream'
+        head += `\r\nContent-Type: ${type}`
+        this.write(new Buffer(head + '\r\n\r\n'))
+        this.write(isStream(data) || isBuffer(data) ? data : new Buffer(isObject(data) ? JSON.stringify(data) : data.toString()))
         return this
     }
     
-    if (typeof key === 'object' || typeof key === 'function' || typeof key === 'boolean', typeof key === 'undefined')
-        throw new TypeError(`Invalid key type: ${typeof key}`)
-    
-    if (typeof value === 'function' || (typeof value === 'object' && !util.isArray(value)))
-        throw new TypeError(`Invalid value type: ${typeof value}`)
+    send(data) {
+        return new Promise((resolve, reject) => {
+            if (data) {
+                if (isObject(data)) {
+                    if (!('content-type' in Object.keys(this.request.headers).map(key => key.toLowerCase())))
+                        this.set('Content-Type', 'application/json')
+                    this.write(new Buffer(JSON.stringify(data)))
+                } else this.write(data)
+            }
+            const req = {
+                host: this.request.host,
+                path: this.request.path + this.request.search + (this.request.hash || ''),
+                headers: this.request.headers,
+                method: this.request.method,
+                port: this.request.port || this.request.protocol === 'https:' ? 443 : 80
+            }
+            if (this.request.auth)
+                req['auth'] = this.request.auth
+            const request = https.request(req, res => {
+                resolve(new Response(res))
+            })
+            each(this.data, data => request.write(data))
+            request.end()
+        })
+    }
+}
 
-    if (Array.isArray(value)) for (let val of value)
-        this.request.search  += `${this.request.search[0] === '?' ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(val)}`
-    else this.request.search += `${this.request.search[0] === '?' ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-    return this
-}
-URLEncodedRequest.prototype.send = function send() {
-    this.buf = this.buf.substring(1)
-    this.request.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    return Request.prototype.send.call(this, this.buf)
-}
 function Response(res) {
     this.stream = res
     this.headers = res.headers
