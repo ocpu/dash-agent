@@ -35,6 +35,8 @@ class Request {
         this.request = Object.assign({}, parseURL(url), { method, headers: {} })
         this.request.search = this.request.search || ''
         this.data = []
+        this.method = method
+        this.url = url
     }
 
     static get boundary() { return '--MultipartRequest' }

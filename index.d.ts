@@ -6,6 +6,9 @@ declare interface AttachOptions {
 }
 
 declare interface Request {
+    readonly method: string
+    readonly url: string
+
     query(key: string, value: string): Request
     query(queries: Object): Request
     set(name: string, value: string): Request
