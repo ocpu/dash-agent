@@ -13,4 +13,4 @@ test:
   script:
    - npm i -g tap
    - npm install
-   - npm test
+  #  - npm test
