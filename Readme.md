@@ -37,7 +37,7 @@ dashAgent.del('https://google.com') // == dashAgent('DELETE', 'https://google.co
 #### query(key, value)
 Set additional values to the requests query string.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |key|`string`|Query key|
 |value|`string`|Query value|
@@ -46,7 +46,7 @@ Returns: [`Request`](#request) - The current request
 #### query(queries)
 Set additional values to the requests query string.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |queries|`Object`|Key value pairs query string|
 Returns: [`Request`](#request) - The current request
@@ -54,7 +54,7 @@ Returns: [`Request`](#request) - The current request
 #### set(name, value)
 Set headers on the request.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |name|`string`|Header name|
 |value|`string` \| `number`|Header value|
@@ -63,7 +63,7 @@ Returns: [`Request`](#request) - The current request
 #### set(headers)
 Set headers on the request.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |headers|`Object`|Headers|
 Returns: [`Request`](#request) - The current request
@@ -73,7 +73,7 @@ Send form data with the request.
 
 This sets the Content-Type header to `application/x-www-form-urlencoded`.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |data|`Object`|Data from a form|
 Returns: [`Request`](#request) - The current request
@@ -83,7 +83,7 @@ Attach any data to the request. Like files.
 
 This sets the Content-Type header to `multipart/form-data`.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |field|`string`|Data field name|
 |data|`Buffer`|Data you want to attach to the request|
@@ -95,7 +95,7 @@ Attach any text data to the request.
 
 This sets the Content-Type header to `multipart/form-data`.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |field|`string`|Data field name|
 |data|`string`|String data you want to attach to the request|
@@ -107,7 +107,7 @@ Attach JSON data to the request.
 
 This sets the Content-Type header to `multipart/form-data`.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |field|`string`|Name of json content|
 |data|`Object`|json content|
@@ -116,7 +116,7 @@ Returns: [`Request`](#request) - The current request
 #### write(data)
 Write data to the request.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |data|`Buffer` \| `string`|Data to write to the request|
 Returns: [`Request`](#request) - The current request
@@ -129,13 +129,13 @@ Returns: [`Request`](#request) - The cloned request
 #### send([data])
 End the request and send it down the pipe.
 
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |[data]|`Buffer` \| `Object` \| `string`|Any last data you want to send down the pipe|
 Returns: `Promise<Response>`
 
 #### pipe(stream[, contentType])
-|Parameter|Type|Descripetion|
+|Parameter|Type|Description|
 |-|-|-|
 |stream|`stream.Readable`|Pipe the stream to the request|
 |[contentType]|`string`|Content type|
