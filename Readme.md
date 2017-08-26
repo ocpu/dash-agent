@@ -41,6 +41,7 @@ Set additional values to the requests query string.
 |-|-|-|
 |key|`string`|Query key|
 |value|`string`|Query value|
+
 Returns: [`Request`](#request) - The current request
 
 #### query(queries)
@@ -49,6 +50,7 @@ Set additional values to the requests query string.
 |Parameter|Type|Description|
 |-|-|-|
 |queries|`Object`|Key value pairs query string|
+
 Returns: [`Request`](#request) - The current request
 
 #### set(name, value)
@@ -58,6 +60,7 @@ Set headers on the request.
 |-|-|-|
 |name|`string`|Header name|
 |value|`string` \| `number`|Header value|
+
 Returns: [`Request`](#request) - The current request
 
 #### set(headers)
@@ -66,6 +69,7 @@ Set headers on the request.
 |Parameter|Type|Description|
 |-|-|-|
 |headers|`Object`|Headers|
+
 Returns: [`Request`](#request) - The current request
 
 #### form(data)
@@ -76,6 +80,7 @@ This sets the Content-Type header to `application/x-www-form-urlencoded`.
 |Parameter|Type|Description|
 |-|-|-|
 |data|`Object`|Data from a form|
+
 Returns: [`Request`](#request) - The current request
 
 #### attach(field, data[, options])
@@ -88,6 +93,7 @@ This sets the Content-Type header to `multipart/form-data`.
 |field|`string`|Data field name|
 |data|`Buffer`|Data you want to attach to the request|
 |[options]|`{ [contentType]: string, [filename]: string }`|Content type and potencial filename of data|
+
 Returns: [`Request`](#request) - The current request
 
 #### attach(field, data[, contentType])
@@ -100,6 +106,7 @@ This sets the Content-Type header to `multipart/form-data`.
 |field|`string`|Data field name|
 |data|`string`|String data you want to attach to the request|
 |[contentType]|`string`|The type of the data. Defaults to `"text/plain"`|
+
 Returns: [`Request`](#request) - The current request
 
 #### attach(field, data)
@@ -111,6 +118,7 @@ This sets the Content-Type header to `multipart/form-data`.
 |-|-|-|
 |field|`string`|Name of json content|
 |data|`Object`|json content|
+
 Returns: [`Request`](#request) - The current request
 
 #### write(data)
@@ -119,6 +127,7 @@ Write data to the request.
 |Parameter|Type|Description|
 |-|-|-|
 |data|`Buffer` \| `string`|Data to write to the request|
+
 Returns: [`Request`](#request) - The current request
 
 #### clone()
@@ -132,6 +141,7 @@ End the request and send it down the pipe.
 |Parameter|Type|Description|
 |-|-|-|
 |[data]|`Buffer` \| `Object` \| `string`|Any last data you want to send down the pipe|
+
 Returns: `Promise<Response>`
 
 #### pipe(stream[, contentType])
@@ -139,6 +149,7 @@ Returns: `Promise<Response>`
 |-|-|-|
 |stream|`stream.Readable`|Pipe the stream to the request|
 |[contentType]|`string`|Content type|
+
 Returns: `Promise<Response>`
 
 ### Response
@@ -180,6 +191,7 @@ Using [buffer()](#buffer) to get the text content.
 |Parameters|Type|Description|
 |-|-|-|
 |[encoding]|`ascii` \| `utf8` \| `utf16le` \| `ucs2` \| `base64` \| `latin1` \| `binary` \| `hex`|Text encoding. Default `'utf8'`|
+
 Returns: `Promise<string>` - The text response.
 
 #### json()
