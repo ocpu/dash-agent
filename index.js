@@ -193,12 +193,19 @@ Response.prototype.reader = function reader() {
         resolve(stream)
     })
 }
+Response.prototype.bufferRaw = function bufferRaw() { return this.readerRaw().then(reader => new Promise(resolve => {
+    const data = []
+    let totalLength = 0
+    reader
+        .on('data', d => {data.push(d);totalLength += d.length})
+        .once('end', () => resolve(typeof data[1] === 'string' ? Buffer.alloc(totalLength, data.join('')) : Buffer.concat(data, totalLength)))
+}))}
 Response.prototype.buffer = function buffer() { return this.reader().then(reader => new Promise(resolve => {
     const data = []
     let totalLength = 0
     reader
         .on('data', d => {data.push(d);totalLength += d.length})
-        .once('end', () => resolve(Buffer.concat(data, totalLength)))
+        .once('end', () => resolve(typeof data[1] === 'string' ? Buffer.alloc(totalLength, data.join('')) : Buffer.concat(data, totalLength)))
 }))}
 Response.prototype.text = function text(enconding) { return this.buffer().then(buf => buf.toString(enconding || 'utf-8')) }
 Response.prototype.json = function json() { return this.text().then(JSON.parse) }

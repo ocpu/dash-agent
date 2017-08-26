@@ -11,7 +11,7 @@ declare interface Request {
 
     query(key: string, value: string): Request
     query(queries: Object): Request
-    set(name: string, value: string): Request
+    set(name: string, value: string | number): Request
     set(headers: Object): Request
     /**
      * Send form data url encoded 
@@ -21,7 +21,6 @@ declare interface Request {
      * form data
      */
     attach(field: string, data: Buffer, options?: AttachOptions): Request
-    attach(field: string, data: stream.Readable, options?: AttachOptions): Request
     attach(field: string, data: string, contentType?: string = 'text/plain'): Request
     attach(field: string, data: Object): Request
     write(data: Buffer): Request
@@ -43,6 +42,7 @@ declare class Response {
 
     readerRaw(): Promise<stream.Readable>
     reader(): Promise<stream.Readable>
+    bufferRaw(): Promise<Buffer>
     buffer(): Promise<Buffer>
     text(encoding?: BufferEncoding = 'utf-8'): Promise<string>
     json(): Promise<Object>
