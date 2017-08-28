@@ -1,3 +1,8 @@
+# dash-agent
+[![npm](https://img.shields.io/npm/v/dash-agent.svg?style=flat-square)](https://www.npmjs.com/package/dash-agent)
+
+Making requests easier
+
 ## Simple usage
 
 ```js
