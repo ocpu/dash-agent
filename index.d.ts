@@ -1,5 +1,17 @@
 import stream from 'stream'
 
+declare interface Response {
+    readonly headers: Object
+    readonly code: number
+    readonly message: string
+    readonly ok: boolean
+
+    stream(): Promise<stream.Readable>
+    buffer(): Promise<Buffer>
+    text(encoding: BufferEncoding = 'utf-8'): Promise<string>
+    json(): Promise<Object>
+}
+
 declare interface AttachOptions {
     contentType: string
     filename: string
@@ -13,6 +25,8 @@ declare interface Request {
     query(queries: Object): Request
     set(name: string, value: string | number): Request
     set(headers: Object): Request
+    header(name: string, value: string | number): Request
+    header(headers: Object): Request
     /**
      * Send form data url encoded 
      */
@@ -23,8 +37,6 @@ declare interface Request {
     attach(field: string, data: Buffer, options?: AttachOptions): Request
     attach(field: string, data: string, contentType?: string = 'text/plain'): Request
     attach(field: string, data: Object): Request
-    write(data: Buffer): Request
-    write(data: string): Request
     clone(): Request
     send(): Promise<Response>
     send(data: Buffer): Promise<Response>
@@ -33,23 +45,8 @@ declare interface Request {
     pipe(stream: stream.Readable, contentType?: string): Promise<Response>
 }
 
-declare class Response {
-
-    readonly headers: Object
-    readonly statusCode: number
-    readonly statusMessage: string
-    readonly ok: boolean
-
-    readerRaw(): Promise<stream.Readable>
-    reader(): Promise<stream.Readable>
-    bufferRaw(): Promise<Buffer>
-    buffer(): Promise<Buffer>
-    text(encoding?: BufferEncoding = 'utf-8'): Promise<string>
-    json(): Promise<Object>
-}
-
-declare function request(method: string, url: string): Request
-declare namespace request {
+declare function create(method: string, url: string): Request
+declare namespace create {
     function get(url: string): Request
     function head(url: string): Request
     function post(url: string): Request
@@ -60,4 +57,4 @@ declare namespace request {
     function patch(url: string): Request
 }
 
-export = request
+export = create

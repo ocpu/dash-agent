@@ -4,7 +4,7 @@
   "description": "Making requests easier",
   "main": "index.js",
   "scripts": {
-    "test": "tap test/*.js --cov",
+    "test": "mocha --watch test/*.test.js",
     "posttest": "tap --coverage-report=text-summary"
   },
   "repository": "ocpu/dash-agent",
@@ -18,10 +18,12 @@
   "bugs": "https://github.com/ocpu/dash-agent/issues",
   "homepage": "https://github.com/ocpu/dash-agent#README",
   "devDependencies": {
-    "expect.js": "^0.3.1",
-    "mocha": "^3.4.1",
-    "mock-require": "^2.0.2",
-    "sinon": "^2.2.0",
-    "tap": "^10.3.2"
+    "express": "^4.16.2",
+    "jest": "^22.3.0"
+  },
+  "dependencies": {
+    "iltorb": "^2.0.3",
+    "is-stream": "1.1.0",
+    "lzw-stream": "^1.0.0"
   }
 }
