@@ -13,6 +13,7 @@ const create = module.exports = (method, url) => {
     set: require('./lib/header')(self),
     form: require('./lib/form')(self),
     attach: require('./lib/attach')(self),
+    clone: require('./lib/clone')(self),
     _data: stream,
   }
   return self.builder
