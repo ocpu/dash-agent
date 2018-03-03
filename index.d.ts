@@ -1,23 +1,25 @@
-import stream from 'stream'
+import { Readable } from 'stream'
 
-declare interface Response {
+declare function create(method: string, url: string): create.Request
+declare namespace create {
+  export interface Response {
     readonly headers: Object
     readonly code: number
     readonly message: string
     readonly ok: boolean
 
-    stream(): Promise<stream.Readable>
+    stream(): Promise<Readable>
     buffer(): Promise<Buffer>
     text(encoding: BufferEncoding = 'utf-8'): Promise<string>
     json(): Promise<Object>
-}
-
-declare interface AttachOptions {
+  }
+  
+  interface AttachOptions {
     contentType: string
     filename: string
-}
-
-declare interface Request {
+  }
+  
+  export interface Request {
     readonly method: string
     readonly url: string
 
@@ -43,18 +45,16 @@ declare interface Request {
     send(data: Object): Promise<Response>
     send(data: string): Promise<Response>
     pipe(stream: stream.Readable, contentType?: string): Promise<Response>
-}
+  }
 
-declare function create(method: string, url: string): Request
-declare namespace create {
-    function get(url: string): Request
-    function head(url: string): Request
-    function post(url: string): Request
-    function put(url: string): Request
-    function del(url: string): Request
-    function connect(url: string): Request
-    function options(url: string): Request
-    function patch(url: string): Request
+  function get(url: string): Request
+  function head(url: string): Request
+  function post(url: string): Request
+  function put(url: string): Request
+  function del(url: string): Request
+  function connect(url: string): Request
+  function options(url: string): Request
+  function patch(url: string): Request
 }
 
 export = create
