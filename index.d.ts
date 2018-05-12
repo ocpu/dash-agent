@@ -1,60 +1,25 @@
-import stream from 'stream'
+import { Readable } from "stream";
+import { Brev } from "brev";
+import { IncomingMessage } from "http";
 
-declare interface Response {
-    readonly headers: Object
-    readonly code: number
-    readonly message: string
-    readonly ok: boolean
-
-    stream(): Promise<stream.Readable>
-    buffer(): Promise<Buffer>
-    text(encoding: BufferEncoding = 'utf-8'): Promise<string>
-    json(): Promise<Object>
+interface EventMap {
+  "response": IncomingMessage
+  "data": Buffer
+  "end": void
+  "close": void
+  "readable": void
+  "error": Error
 }
 
-declare interface AttachOptions {
-    contentType: string
-    filename: string
-}
+declare function request(url: string): {
+  go(): Promise<IncomingMessage>
+  go(callback: (IncommingMessage) => void): void
+  set(name: string, value: string | string[]): this
+  set(pairs: { [name: string]: string | string[] }): this
+  setHeader(name: string, value: string | string[]): this
+  setHeaders(pairs: { [name: string]: string | string[] }): this
+  compress(...order: ('identity' | 'gzip' | 'deflate' | 'compress' | 'br')[]): this
+  decompress(): this
+} & Brev<EventMap> & Readable
 
-declare interface Request {
-    readonly method: string
-    readonly url: string
-
-    query(key: string, value: string): Request
-    query(queries: Object): Request
-    set(name: string, value: string | number): Request
-    set(headers: Object): Request
-    header(name: string, value: string | number): Request
-    header(headers: Object): Request
-    /**
-     * Send form data url encoded 
-     */
-    form(data: Object): Request
-    /**
-     * form data
-     */
-    attach(field: string, data: Buffer, options?: AttachOptions): Request
-    attach(field: string, data: string, contentType?: string = 'text/plain'): Request
-    attach(field: string, data: Object): Request
-    clone(): Request
-    send(): Promise<Response>
-    send(data: Buffer): Promise<Response>
-    send(data: Object): Promise<Response>
-    send(data: string): Promise<Response>
-    pipe(stream: stream.Readable, contentType?: string): Promise<Response>
-}
-
-declare function create(method: string, url: string): Request
-declare namespace create {
-    function get(url: string): Request
-    function head(url: string): Request
-    function post(url: string): Request
-    function put(url: string): Request
-    function del(url: string): Request
-    function connect(url: string): Request
-    function options(url: string): Request
-    function patch(url: string): Request
-}
-
-export = create
+export = request

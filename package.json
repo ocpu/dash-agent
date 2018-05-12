@@ -1,6 +1,6 @@
 {
   "name": "dash-agent",
-  "version": "0.2.1-beta",
+  "version": "1.0.0",
   "description": "Making requests easier",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,8 @@
   "keywords": [
     "request",
     "dash",
-    "agent"
+    "agent",
+    "http"
   ],
   "author": "Martin Hövre <martin.hovre@opencubes.io>",
   "license": "MIT",
@@ -19,11 +20,15 @@
   "homepage": "https://github.com/ocpu/dash-agent#README",
   "devDependencies": {
     "express": "^4.16.2",
-    "jest": "^22.3.0"
+    "jest": "^22.4.3"
   },
   "dependencies": {
+    "brev": "github:ocpu/brev",
+    "d": "^1.0.0",
+    "is-stream": "1.1.0"
+  },
+  "optionalDependencies": {
     "iltorb": "^2.0.3",
-    "is-stream": "1.1.0",
     "lzw-stream": "^1.0.0"
   }
 }
