@@ -1,6 +1,6 @@
 {
   "name": "dash-agent",
-  "version": "1.0.0",
+  "version": "1.0.0-p.1",
   "description": "Making requests easier",
   "main": "index.js",
   "scripts": {
@@ -23,12 +23,12 @@
     "jest": "^22.4.3"
   },
   "dependencies": {
-    "brev": "github:ocpu/brev",
+    "brev": "^1.2.0-p.1",
     "d": "^1.0.0",
     "is-stream": "1.1.0"
   },
   "optionalDependencies": {
-    "iltorb": "^2.0.3",
+    "iltorb": "^2.3.2",
     "lzw-stream": "^1.0.0"
   }
 }
